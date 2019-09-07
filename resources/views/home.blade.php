@@ -9,7 +9,8 @@
                 <li class="list-group-item">
                     <a href={{ $contribution->link }}>
                         {{ $contribution->title }}
-                    </a>
+                    </a> by <a href="#">{{ $contribution->user->name }}</a>,
+                    {{ $contribution->updated_at->diffForHumans() }}
                 </li>
                 @endforeach
             </ul>
