@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 
 class ContributionController extends Controller
 {
-    public function index()
+    public function index($slug = '')
     {
-        $contributions = Contribution::latest()->paginate(20);
-        $channels = Channel::get(['id', 'name']);
+        $channels = Channel::get();
+
+        if ($slug) {
+            $contributions = Contribution::where('channel_id', $channels->where('slug', $slug)->first()->id)
+                ->latest()->paginate(20);
+        } else {
+            $contributions = Contribution::latest()->paginate(20);
+        }
+
 
         return view('home', compact('contributions', 'channels'));
     }

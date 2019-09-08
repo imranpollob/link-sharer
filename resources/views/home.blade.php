@@ -30,7 +30,7 @@
                             </div>
                         </div>
 
-                        <span class="badge text-light ml-3" style="background-color: {{ $contribution->channel->color }}; font-size:1rem">{{ $contribution->channel->name }}</span>
+                        <a class="btn btn-sm ml-3 text-white" style="background-color: {{ $contribution->channel->color }}; font-size: .8rem;;" href="/channel/{{ $contribution->channel->slug }}">{{ $contribution->channel->name }}</a>
                     </div>
                 </li>
                 @endforeach
