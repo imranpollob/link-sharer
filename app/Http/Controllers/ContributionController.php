@@ -24,7 +24,29 @@ class ContributionController extends Controller
             'channel_id' => 'required|exists:channels,id'
         ]);
 
+
+        $is_old = Contribution::where('link', $data['link'])->first();
+
+        if ($is_old) {
+            $is_old->touch();
+
+            return back();
+        }
+
         auth()->user()->contribution()->create($data);
+
+        return back();
+    }
+
+    public function vote(Request $request)
+    {
+        $data = $request->validate([
+            'contribution_id' => 'required|exists:contributions,id'
+        ]);
+
+        $contribution = Contribution::find($data['contribution_id']);
+
+        $contribution->upvotes()->toggle(auth()->id());
 
         return back();
     }

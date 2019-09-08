@@ -8,16 +8,29 @@
                 @foreach($contributions as $contribution)
                 <li class="list-group-item">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
+                        <div class="d-flex align-items-center">
                             <div>
-                                <a href={{ $contribution->link }} class="h4 text-dark">{{ $contribution->title }}</a>
+                                <form action="/vote" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="contribution_id" value="{{ $contribution->id }}"/>
+                                    <button class="btn {{ $contribution->upvotes->contains(auth()->id()) == true ? 'btn-primary' : 'btn-secondary' }}" style="width:50px" type="submit">
+                                        {{ $contribution->upvotes->count() }}
+                                    </button>
+                                </form>
                             </div>
-                            <div>
-                                <a href="#">{{ $contribution->user->name }}</a> posted {{ $contribution->updated_at->diffForHumans() }}
+
+                            <div class="pl-3">
+                                <div>
+                                    <a href={{ $contribution->link }} class="h4 text-dark font-weight-bold">{{ $contribution->title }}</a>
+                                </div>
+                                <div>
+                                    <a href="#">{{ $contribution->user->name }}</a> <span class="text-muted">posted</span>
+                                    <span class="text-dark">{{ $contribution->updated_at->diffForHumans() }}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <span class="badge text-light" style="background-color: {{ $contribution->channel->color }}; font-size:1rem">{{ $contribution->channel->name }}</span>
+                        <span class="badge text-light ml-3" style="background-color: {{ $contribution->channel->color }}; font-size:1rem">{{ $contribution->channel->name }}</span>
                     </div>
                 </li>
                 @endforeach
