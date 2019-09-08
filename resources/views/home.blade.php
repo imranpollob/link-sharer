@@ -4,6 +4,30 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
+            <div class="mb-3 d-flex">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ $dropdown['sort'] }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="{{ request()->url() }}/">Recent</a>
+                        <a class="dropdown-item" href="?popularity=1">Popular</a>
+                    </div>
+                </div>
+
+                <div class="dropdown pl-3">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ $dropdown['channel'] }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/">All</a>
+                        @foreach($channels as $channel)
+                        <a class="dropdown-item" href="/channel/{{ $channel->slug }}">{{ $channel->name }}</a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
             <ul class="list-group">
                 @foreach($contributions as $contribution)
                 <li class="list-group-item">
@@ -12,7 +36,7 @@
                             <div>
                                 <form action="/vote" method="POST">
                                     @csrf
-                                    <input type="hidden" name="contribution_id" value="{{ $contribution->id }}"/>
+                                    <input type="hidden" name="contribution_id" value="{{ $contribution->id }}" />
                                     <button class="btn {{ $contribution->upvotes->contains(auth()->id()) == true ? 'btn-primary' : 'btn-secondary' }}" style="width:50px" type="submit">
                                         {{ $contribution->upvotes->count() }}
                                     </button>

@@ -13,15 +13,31 @@ class ContributionController extends Controller
         $channels = Channel::get();
 
         if ($slug) {
-            $contributions = Contribution::where('channel_id', $channels->where('slug', $slug)->first()->id)
-                ->latest()->paginate(20);
+            $channel = $channels->where('slug', $slug)->first();
+
+            $dropdown['channel'] =  $channel->name;
+
+            $contributions = Contribution::withCount('upvotes')
+                ->where('channel_id', $channel->id);
         } else {
-            $contributions = Contribution::latest()->paginate(20);
+            $dropdown['channel'] =  'All';
+
+            $contributions = Contribution::withCount('upvotes');
         }
 
+        if (request()->input('popularity') == '1') {
+            $dropdown['sort'] = 'Popular';
 
-        return view('home', compact('contributions', 'channels'));
+            $contributions = $contributions->orderBy('upvotes_count', 'desc')->paginate(20);
+        } else {
+            $dropdown['sort'] = 'Recent';
+
+            $contributions = $contributions->latest()->paginate(20);
+        }
+
+        return view('home', compact('contributions', 'channels', 'dropdown'));
     }
+
 
     public function store(Request $request)
     {
@@ -44,6 +60,7 @@ class ContributionController extends Controller
 
         return back();
     }
+
 
     public function vote(Request $request)
     {
