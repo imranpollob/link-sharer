@@ -19,7 +19,7 @@ class ChannelSeeder extends Seeder
         ]);
 
         Channel::create([
-            'name' => 'JavsScript',
+            'name' => 'JavaScript',
             'slug' => 'javascript',
             'color' => '#e9d54d'
         ]);
